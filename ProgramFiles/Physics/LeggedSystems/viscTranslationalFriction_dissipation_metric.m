@@ -123,20 +123,12 @@ function link_metric = legged_transViscDrag_metric(J_full,A,c)
     %   translational velocities obtained from the full jacobian, and the
     %   final main diagonal entry is '0' since leg foot point-contact
     %   rotational velocities
-
-    % Number of joints in our shape-space:
-    % m = size(A,2); % we can directly call this value for comp speed
- 
-    % let's define a matrix that will help us ignore the rotational
-    % velocity contributions (both in our hybrid connection and
-    % translational velocity based drag)
-    transMat = [1 0 0;
-                0 1 0;
-                0 0 0];
     
     % (Note that drag terms need to be positive here to make this a
     % positive-definite matrix that we can use as a metric)
-    drag_matrix = transMat*c;
+    drag_matrix = [1 0 0;
+                   0 1 0;
+                   0 0 0]*c;
 
     %%%%%%%%%%%
     % Calculate the jacobian from shape variables to body velocity of this
@@ -145,7 +137,7 @@ function link_metric = legged_transViscDrag_metric(J_full,A,c)
     % -A maps shape velocity to body velocity of the system, so augmenting
     % -A with an identity matrix produces a map from shape velocity to body
     % and shape velocity of the system
-    J_intermediate = [-transMat*A; eye(size(A,2))];
+    J_intermediate = [-A; eye(size(A,2))];
     
     % J_full maps the system's body and shape velocity to the body velocity
     % of this link.

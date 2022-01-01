@@ -133,5 +133,10 @@ function [A, h, J, J_full, omega] = pinned_leg_constraint(geometry,physics,joint
     % For this calculation, omega_g is the first three columns of omega,
     % and omega_alpha is the remaining columns
     A = omega(:,1:3)\omega(:,4:end);
+
+    % Now, we make the third row of the A-matrix 0 since we don't want the
+    % rotational velocity of the leg-pin, rather we need to rotational
+    % velocity on the body frame:
+    A(3,:) = zeros(1,size(A,2));
     
 end
