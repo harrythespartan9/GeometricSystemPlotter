@@ -23,11 +23,11 @@ switch geometry.type
     case 'n-disk-legged'
 
         % Now, we make sure there is only one pinned leg:
-        if sum(isinf(s.physics.st_friction_coeff)) == 1
+        if sum(isinf(physics.st_friction_coeff)) == 1
 
             physics_function = @pinned_leg_constraint;
 
-        elseif sum(isinf(s.physics.st_friction_coeff)) > 1
+        elseif sum(isinf(physics.st_friction_coeff)) > 1
 
             error(['ERROR: Single disk legged system cant have more than 1 ' ...
                 'pinned leg']);

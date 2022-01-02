@@ -98,7 +98,7 @@ function [A, h, J, J_full, omega] = pinned_leg_constraint(geometry,physics,joint
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % Now, we obtain the full jacobian of this leg as the 'Omega' matrix
     % which is the pfaffian constraint on this system.
-    omega = J_full{idx}; omega(:,3) = [0, 0, -1];
+    omega = J_full{idx}; omega(:,3) = [0, 0, -1]';
 
     %%%%%%%%
     % Since we obtained the omega matrix by velocity constraints on the

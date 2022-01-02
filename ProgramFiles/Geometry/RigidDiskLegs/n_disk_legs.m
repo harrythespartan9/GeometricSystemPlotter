@@ -172,16 +172,16 @@ function [h, J, J_full] = n_disk_legs(geometry,shapeparams)
         % Set the Jacobian compute flag to false:
         Jf_flag= false;
         
-        % Check if it is the body or the leg
+        % Check if it is the body or the leg and compute the transform
         if idx1 == Rigid_link_id
     
             leg_flag = false;
             
             % If this is not a leg, compute the transform now:
-            h.pos(idx1) = leg_distal_transform(0,0);
+            h.pos(idx1,:) = leg_distal_transform(0,0);
     
             % The first 3x3 matrix of the full jacobian:
-            J_full{idx1}(:,1:3) = Adjinv(h.pos(idx1));
+            J_full{idx1}(:,1:3) = Adjinv(h.pos(idx1,:));
     
             % Set the jacobian compute flag to true:
             Jf_flag = true;
@@ -189,6 +189,17 @@ function [h, J, J_full] = n_disk_legs(geometry,shapeparams)
         else 
     
             leg_flag = true;
+
+            % The transform if it is a leg with the corres. joint angle:~~~
+            % Check which is the corresponding angle:
+            if idx1 < Rigid_link_id
+                idx2 = idx1;
+            else
+                idx2 = idx1 - 1;
+            end
+            % Do the compute
+            h.pos(idx1,:) =...
+                leg_distal_transform(jointangles(idx2),linklengths(idx1));
     
         end
     
@@ -204,18 +215,11 @@ function [h, J, J_full] = n_disk_legs(geometry,shapeparams)
                 joint_flag = false;
             end
     
-            % The transform if it is a leg and the corres. joint angle:~~~~
-            if leg_flag && joint_flag
-                h.pos(idx1) =...
-                    leg_distal_transform...
-                    (jointangles(idx2),linklengths(idx1));
-            end
-    
             %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
             % Obtain the standard derivate of h - J:~~~~~~~~~~~~~~~~~~~~~~~
     
-            J{idx1}(:, idx2) = Adjinv(h.pos(idx1))*...
+            J{idx1}(:, idx2) = Adjinv(h.pos(idx1,:))*...
                 ([0, 0, 1]*double(joint_flag)*double(leg_flag))';
     
             %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,7 +230,7 @@ function [h, J, J_full] = n_disk_legs(geometry,shapeparams)
     
                 % The body-vel component of the full jacobian and set the 
                 % flag:
-                J_full{idx1}(:, 1:3) = Adjinv(h.pos(idx1));
+                J_full{idx1}(:, 1:3) = Adjinv(h.pos(idx1,:));
                 Jf_flag = true;
     
                 % Insert the joint jacobian:

@@ -10,10 +10,10 @@ switch geometry.type
 
         switch physics.type
     
-            case 'isotropic'
-                physics_function = @OneDisk_viscTransFric_metric;
+            case 'isotropic_friction'
+                physics_function = @viscTranslationalFriction_dissipation_metric;
         
-            case 'anisotropic'
+            case 'anisotropic_friction'
                 error('ERROR: Viscous friction anisotropy is not supported at the moment!');
 
             case 'inertial'

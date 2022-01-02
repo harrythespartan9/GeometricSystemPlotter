@@ -95,7 +95,7 @@ function Mp = viscTranslationalFriction_dissipation_metric(geometry,physics,join
     for idx = 1:numel(link_metrics)
         
         % Check if this is a dragging leg before computing the dissipation
-        if s.physics.st_friction_coeff(idx) == 0
+        if physics.st_friction_coeff(idx) == 0
 
             link_metrics{idx} = legged_transViscDrag_metric(J_full{idx},...% Jacobian from body velocity of base link and shape velocity to body velocity of this link
                               A,...                                        % Local connection (i.e. Jacobian from shape velocity to body velocity of base link)
