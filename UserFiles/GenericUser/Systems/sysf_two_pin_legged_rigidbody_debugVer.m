@@ -1,4 +1,4 @@
-function output = sysf_two_pin_legged_rigidbody(input_mode,pathnames)
+function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
 
 	% Default arguments
 	if ~exist('input_mode','var')
@@ -13,7 +13,7 @@ function output = sysf_two_pin_legged_rigidbody(input_mode,pathnames)
 
 		case 'name'
 
-			output = 'Pin-Legged Rigid System: 2-legged'; % Display name
+			output = 'Pin-Legged Rigid System: 2-legged -- Debug version'; % Display name
 
 		case 'dependency'
 
@@ -79,6 +79,12 @@ function output = sysf_two_pin_legged_rigidbody(input_mode,pathnames)
             s.physics.type = 'isotropic_friction';
             % Other types include (NOT SUPPORT RN) ~~~~~~~~~~~~~~~~~~~~~~~~
             % 'anisotropic_friction' 'inertial'
+            s.physics.drag_ratio = 2;
+            s.physics.drag_coefficient = 1;
+            s.physics.fluid_density = 1;
+            % Above we have parameters from the LowRE RFT based metric for
+            % debugging purposes.
+            
            
             % Functional Local connection
                     % in physics
