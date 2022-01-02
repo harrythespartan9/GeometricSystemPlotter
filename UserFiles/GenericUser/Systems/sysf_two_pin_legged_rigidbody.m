@@ -85,12 +85,12 @@ function output = sysf_two_pin_legged_rigidbody(input_mode,pathnames)
             s.A = @(alpha1,alpha2) Legged_local_connection( ...
                         s.geometry,...                           % Geometry of body
                         s.physics,...                            % Physics properties
-                        [alpha1,alpha2]);                    % Joint angles
+                        [alpha1,alpha2]);                        % Joint angles
                     % in physics
             s.metric = @(alpha1,alpha2) Legged_dissipation_metric(...
                         s.geometry,...                           % Geometry of body
                         s.physics,...                            % Physics properties
-                        [alpha1,alpha2]);                    % Joint angles
+                        [alpha1,alpha2]);                        % Joint angles
 
             % No dissipation metric for now. Need to incorporate this when
             % we start slipping.
