@@ -57,7 +57,10 @@ function [stroke] = strokedef(t)
 	Rot=sqrt(2)/2*[1 -1;1 1];
 	a=pi/4;
 
-	stroke=(Rot*[-a*cos(t);-a*sin(t)] + [0, pi]')';
-
+	stroke=(Rot*[-a*cos(t);-a*sin(t)] + [0, 0]')'; % [0, pi]
+    % The diametrically opposite nature of the gait is capture in the input
+    % to the metric and connections functions. Check the sysf file: 
+    % "C:\Users\hario\Documents\GitHub\GeometricSystemPlotter\UserFiles\
+    % GenericUser\Systems\sysf_two_pin_legged_rigidbody_debugVer.m"
 
 end

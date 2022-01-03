@@ -46,9 +46,8 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
                 sum(s.geometry.linklengths)/(numel(s.geometry.linklengths)-1); 
             % let's get the body-link to have length 1
             s.geometry.link_shape = {'ellipse','ellipse','ellipse'};
-                st_legs = struct('aspect_ratio',0.1);
-                st_body = struct('aspect_ratio',0.5);
-            s.geometry.link_shape_parameters = {st_legs,st_body,st_legs};
+                st = struct('aspect_ratio',0.1);
+            s.geometry.link_shape_parameters = {st,st,st};
             
             %%%
             % Define properties for visualizing the system
@@ -56,7 +55,9 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace. (Use a cell of gridpoints along each
             % axis to use different spacings for different axes)
-            s.visual.grid_spacing = [alpha_1_lim, alpha_2_lim];
+            s.visual.grid_spacing = [alpha_1_lim(1),...
+                alpha_1_lim(1) + abs(alpha_1_lim(1) - alpha_2_lim(end))/2,...
+                alpha_2_lim(end)];
 
             %%%
             %%%%%%
@@ -75,7 +76,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
                                                          % contacting links
                                                          % inf -- for
                                                          % pinned legs
-            % Other cases for the system - [inf, nan, 0], [0, nan, 0]
+            % Other cases for the system - [inf, nan, 0], [0, nan, 0], [0, nan, inf]
             % The second case would be interesting since that would purely
             % be frictional motion.
 
