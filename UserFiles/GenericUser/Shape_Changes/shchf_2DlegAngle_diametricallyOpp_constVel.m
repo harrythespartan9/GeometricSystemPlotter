@@ -40,8 +40,7 @@ function output = shchf_2DlegAngle_diametricallyOpp_constVel(input_mode,pathname
 			p.cBVI_method = 'simple';
 
 			%path resolution
-			p.phi_res = 101; 
-            % keep this odd since we will have a distinct mid stroke value
+			p.phi_res = 100;
 
 
 			%%%%
@@ -52,18 +51,13 @@ function output = shchf_2DlegAngle_diametricallyOpp_constVel(input_mode,pathname
 end
 
 function [stroke] = strokedef(t)
-    
-    % Let's define our initial condition and amplitude,
-    stroke0 = pi/4; strokeHW = -pi/4; % HW stands for half-way
 
-    % Define the half stroke:
-    stroke_half = linspace(stroke0, strokeHW, ceil(length(t)/2));
+	t = -t(:)';
 
-    % Now, we define the stroke assuming we have constant leg angle rate
-    stroke(:) = [stroke_half, ...
-        fliplr(stroke_half(1:end-1))]';
+	Rot=sqrt(2)/2*[1 -1;1 1];
+	a=pi/4;
 
-    % And, we now extend this to the other leg as follows,
-    stroke = repmat(stroke, 1, 2); stroke(:,2) = pi + stroke(:,2);
+	stroke=(Rot*[-a*cos(t);-a*sin(t)] + [0, pi]')';
+
 
 end

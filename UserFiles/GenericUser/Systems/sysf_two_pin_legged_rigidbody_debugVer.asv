@@ -25,7 +25,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
 
             %%%%%%
             % Ankle limit amplitude for the legged robot:
-            ank = round(pi/4, 1); % +- 45degs
+            ank = pi/4;
 
             % Leg-to-link length fraction:
             a = 1;
@@ -33,10 +33,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             % Set the body-length of the robot:
             bl = 1;
 
-            % We want the legs to be diametrically opposite, let's set that
-            % up:
-            alpha_1_lim = round([-1, 0, 1]*ank, 1);
-            alpha_2_lim = round(pi + [-1, 0, 1]*ank, 1);
+            % We want the legs to be diametr
 
             % Define system geometry
             s.geometry.type = 'n-disk-legged'; % Other types NOT SUPPORTED RN -- 'n-multidisk-legged'
@@ -56,7 +53,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace. (Use a cell of gridpoints along each
             % axis to use different spacings for different axes)
-            s.visual.grid_spacing = [alpha_1_lim, alpha_2_lim];
+            s.visual.grid_spacing = ank*[-1  0  1];
 
             %%%
             %%%%%%
@@ -111,8 +108,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
 			%Processing details
 
 			%Range over which to evaluate connection
-			s.grid_range = [alpha_1_lim(1)-ank/10, alpha_1_lim(end)+ank/10,...
-                alpha_2_lim(1)-ank/10, alpha_2_lim(end)+ank/10]; % let's say the leg-amp limit is 45degs
+			s.grid_range = [-1.2,1.2,2.8,5.2]*ank; %ank % let's say the leg-amp limit is 45degs
 
 			%densities for various operations
 			s.density.vector = [21 21 ]; %density to display vector field
@@ -124,10 +120,8 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             s.density.mass_eval = [31 31]; % density for mass matrix evaluation
 
 			%shape space tic locations
-			s.tic_locs.x =...
-                [alpha_1_lim(1)-ank/10 alpha_1_lim(1)+ank alpha_1_lim(end)+ank/10];
-            s.tic_locs.y =...
-                [alpha_1_lim(1)-ank/10 alpha_1_lim(1)+ank alpha_1_lim(end)+ank/10];
+			s.tic_locs.x = [-0.8 0 0.8]; % *ank
+            s.tic_locs.y = [3.2 4.0 4.8]; % *ank
 
             % Set system type variable for gait optimization
             s.system_type = 'drag';
