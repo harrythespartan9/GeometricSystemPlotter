@@ -36,7 +36,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             % We want the legs to be diametrically opposite, let's set that
             % up:
             alpha_1_lim = round([-1, 0, 1]*ank, 1);
-            alpha_2_lim = round(pi + [-1, 0, 1]*ank, 1);
+            alpha_2_lim = alpha_1_lim;
 
             % Define system geometry
             s.geometry.type = 'n-disk-legged'; % Other types NOT SUPPORTED RN -- 'n-multidisk-legged'
@@ -96,12 +96,12 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
             s.A = @(alpha1,alpha2) Legged_local_connection( ...
                         s.geometry,...                           % Geometry of body
                         s.physics,...                            % Physics properties
-                        [alpha1,alpha2]);                        % Joint angles
+                        [alpha1,pi + alpha2]);                        % Joint angles
                     % in physics
             s.metric = @(alpha1,alpha2) debug_dissipation_metric(...
                         s.geometry,...                           % Geometry of body
                         s.physics,...                            % Physics properties
-                        [alpha1,alpha2]);                        % Joint angles
+                        [alpha1,pi + alpha2]);                        % Joint angles
 
             % No dissipation metric for now. Need to incorporate this when
             % we start slipping.
@@ -127,7 +127,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
 			s.tic_locs.x =...
                 [alpha_1_lim(1)-ank/10 alpha_1_lim(1)+ank alpha_1_lim(end)+ank/10];
             s.tic_locs.y =...
-                [alpha_1_lim(1)-ank/10 alpha_1_lim(1)+ank alpha_1_lim(end)+ank/10];
+                [alpha_2_lim(1)-ank/10 alpha_2_lim(1)+ank alpha_2_lim(end)+ank/10];
 
             % Set system type variable for gait optimization
             s.system_type = 'drag';
