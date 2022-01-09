@@ -217,7 +217,7 @@ function [h, J, J_full] = n_disk_legs(geometry,shapeparams)
     
             %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-            % Obtain the standard derivate of h - J:~~~~~~~~~~~~~~~~~~~~~~~
+            % Obtain the standard derivate of h - Jacobian:~~~~~~~~~~~~~~~~
     
             J{idx1}(:, idx2) = Adjinv(h.pos(idx1,:))*...
                 ([0, 0, 1]*double(joint_flag)*double(leg_flag))';

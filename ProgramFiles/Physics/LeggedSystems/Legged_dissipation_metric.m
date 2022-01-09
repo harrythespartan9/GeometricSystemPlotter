@@ -18,6 +18,9 @@ switch geometry.type
 
             case 'inertial'
                 error('ERROR: Inertial metric is not supported at the moment!');
+
+            case 'rate_limited'
+                physics_function = @Rate_Limitation_metric;
                 
         end
     

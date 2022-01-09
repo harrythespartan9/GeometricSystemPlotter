@@ -1,4 +1,4 @@
-function output = shchf_2DlegAngle_diametricallyOpp_constVel(input_mode,pathnames)
+function output = shchf_diametricallyOpp_SwingAdhesionCoords_triangular(input_mode,pathnames)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -11,7 +11,7 @@ function output = shchf_2DlegAngle_diametricallyOpp_constVel(input_mode,pathname
 		
 		case 'name'
 			
-			output = 'Const Leg Angular Vel: Triangular Alpha, Amp = pi/4';
+			output = 'Swing Angle and Adhesion: Triangular Alpha, Amp = pi/4';
 			
 		case 'dependency'
 			
@@ -51,16 +51,29 @@ function output = shchf_2DlegAngle_diametricallyOpp_constVel(input_mode,pathname
 end
 
 function [stroke] = strokedef(t)
-
+    
 	t = -t(:)';
 
-	Rot=sqrt(2)/2*[1 -1;1 1];
-	a=pi/4;
+	amp_alpha = pi/4;
 
-	stroke=(Rot*[-a*cos(t);-a*sin(t)] + [0, 0]')'; % [0, pi]
+    % Create a negative sign flag:
+    n = @(phi) -1*(phi < 0);
+
+    % Normalize the phi-range:
+    phiN = @(phi) mod(phi,n(phi)*2*pi);
+
+    % Create some inline functions:
+    triangularAlpha = @(t) ((2*amp_alpha/pi)*(n(phiN(t)).*phiN(t) - pi)...
+        - amp_alpha).*(n(phiN(t)).*phiN(t) >= pi)...
+        + ((-2*amp_alpha/pi)*n(phiN(t)).*phiN(t) + amp_alpha).*(n(phiN(t)).*phiN(t) < pi);
+    stepC = @(t) double(n(phiN(t)).*phiN(t) < pi);
+    
+    % Now, we get the function
+    stroke = [triangularAlpha(t), stepC(t)];
+
     % The diametrically opposite nature of the gait is capture in the input
     % to the metric and connections functions. Check the sysf file: 
     % "C:\Users\hario\Documents\GitHub\GeometricSystemPlotter\UserFiles\
-    % GenericUser\Systems\sysf_two_pin_legged_rigidbody_debugVer.m"
+    % GenericUser\Systems\sysf_two_pin_legged_rigidbody_SmoothModeChange.m"
 
 end

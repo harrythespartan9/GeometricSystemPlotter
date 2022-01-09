@@ -23,17 +23,27 @@ switch geometry.type
     case 'n-disk-legged'
 
         % Now, we make sure there is only one pinned leg:
-        if sum(isinf(physics.st_friction_coeff)) == 1
+        if sum(isinf(physics.st_friction_coeff),'all') == 1
 
             physics_function = @pinned_leg_constraint;
 
-        elseif sum(isinf(physics.st_friction_coeff)) > 1
+        elseif sum(isinf(physics.st_friction_coeff),'all') > 1
+            
+            % If the number of pinned feet equal to the number of modes,
+            % then initialize the 
+            if sum(isinf(physics.st_friction_coeff),'all') == size(physics.st_friction_coeff,1)
+                
+                physics_function = @pin2slip_leg_constraint;
 
-            error(['ERROR: Single disk legged system cant have more than 1 ' ...
+            else
+                
+                error(['ERROR: Single disk legged system cant have more than 1 ' ...
                 'pinned leg']);
+
+            end
         else
 
-            error('ERROR: Frictional connections not supported at the moment!');
+            error('ERROR: Non-pinned contact cases not supported at the moment!');
 
         end
 
