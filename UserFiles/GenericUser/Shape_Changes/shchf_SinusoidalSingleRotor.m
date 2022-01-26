@@ -1,4 +1,4 @@
-function output = shchf_diametricallyOpp_SwingAdhesionCoords_sinusoidal(input_mode,pathnames)
+function output = shchf_SinusoidalSingleRotor(input_mode,pathnames)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -11,7 +11,7 @@ function output = shchf_diametricallyOpp_SwingAdhesionCoords_sinusoidal(input_mo
 		
 		case 'name'
 			
-			output = 'Swing Angle and Adhesion: Sinusoidal Alpha, Amp = pi/4';
+			output = 'Single Rotor: Sinusoidal Turn, Amp = pi/3';
 			
 		case 'dependency'
 			
@@ -54,12 +54,12 @@ function [stroke] = strokedef(t)
     
 	t = -t(:)';
 
-    phi_off = -3*pi/2; % 270 degs phase lead
+%     phi_off = -3*pi/2; % 270 degs phase lead
 %     phi_off = -1*pi/2; % 90 degs lead (inverts the displacements)
     
-	amp_alpha = pi/4;
+	amp_alpha = pi/3;
     
-    stroke = [amp_alpha*cos(t), (1+cos(t + phi_off))/2];
+    stroke = amp_alpha*sin(t);
 %     stroke = [amp_alpha*cos(t), (1-sin(t))/2]; % fixed 270degs ph-lead (CCW gait)
 
     % The diametrically opposite nature of the gait is capture in the input

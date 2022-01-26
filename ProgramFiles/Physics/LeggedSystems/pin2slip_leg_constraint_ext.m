@@ -1,4 +1,4 @@
-function [A, h, J, J_full, omega] = pin2slip_leg_constraint(geometry,~,shapevars)
+function [A, h, J, J_full, omega] = pin2slip_leg_constraint_ext(geometry,~,shapevars)
 % Calculate the local connection for a disk legged system.
 %
 % Inputs:
@@ -82,13 +82,16 @@ function [A, h, J, J_full, omega] = pin2slip_leg_constraint(geometry,~,shapevars
     % viable (maybe +-5percent of the corresponding range)
     %%%%%% UNCOMMENT TWO LINES BELOW IF YOU WANT TO DO DOMAIN CONTROL:
     c = shapevars(numel(shapevars)/2 + 1:end); 
-    c(c < -0.05) = -0.05; c(c > 1.05) = 1.05;
+    c(c < -1.05) = -1.05; c(c > 1.05) = 1.05;
     shapevars(numel(shapevars)/2 + 1:end) = c;
     % Switch off A outside the domain condition:
 %     alpha = jointangles(1:numel(jointangles)/2); % Get the first half of the joint angles
 %     domFlagA = sum(alpha < -pi/2 | alpha > pi/2) == 0;
 %     domFlagC = sum(c < -0.05 | c > 1/05) == 0;
 %     domFlag = double(domFlagA || domFlagC); % if it is outside the domain
+    % A third implementation where the connection only exists at c = -1 or
+    % 1 (within a small numerical threshold):
+%     domFlag = (c > 1.2 & c < 0.80 & c < -1.2 & c > -0.80);
 
     dom_mid = 0.5; % mid of the contact input range
 
@@ -123,14 +126,25 @@ function [A, h, J, J_full, omega] = pin2slip_leg_constraint(geometry,~,shapevars
     % We are gonna concatenate each pfaffian constraint next to each other.
     omega = repmat({omega}, 1, numLegPair);
 
-    % Candidate functions for contact state interpolation (HAVE ONE PAIR OF
-    % FUNCTIONS ACTIVE AT ANY TIME):
+%%%%%%%%%%%%% OLD FORMULATION WITH d's DOMAIN [0,1]
 %     f1 = @(d,d_mid) 1-d;
 %     f2 = @(d,d_mid) d;
 %     f1 = @(d,d_mid) (1+cos(pi*d))/2;
 %     f2 = @(d,d_mid) (1-cos(pi*d))/2;
-    f1 = @(d,d_mid) 1 - 1./(1 + exp(-10*(d-d_mid)));
-    f2 = @(d,d_mid) 1./(1 + exp(-10*(d-d_mid)));
+%     f1 = @(d,d_mid) 1 - 1./(1 + exp(-10*(d-d_mid)));
+%     f2 = @(d,d_mid) 1./(1 + exp(-10*(d-d_mid)));
+    
+%%%%%%%%%%%%% NEW FORMULATION WITH d's DOMAIN [-1,1]
+%     f1 = @(d,d_mid) d;
+%     f2 = @(d,d_mid) -d;
+    f1 = @(d,d_mid) -cos(0.5*pi*(d+1));
+    f2 = @(d,d_mid) cos(0.5*pi*(d+1));
+%     f1 = @(d,d_mid) 2./(1 + exp(-5*(d-d_mid))) - 1;
+%     f2 = @(d,d_mid) -(2./(1 + exp(-5*(d-d_mid))) - 1);
+
+    % Create a contact strength variable that encodes the variability in
+    % the contact connection:
+    C = @(d) (sin((pi/2)*d))^100; % (sin((pi/2)*d))^100 % 1 (debugging purposes)
 
     % Now, we obtain the full jacobian of this leg as the 'Omega' matrix
     % which is the pfaffian constraint on this system.
@@ -167,5 +181,9 @@ function [A, h, J, J_full, omega] = pin2slip_leg_constraint(geometry,~,shapevars
     if exist('domFlag','var')
         A = domFlag*A;
     end
+
+    % Finally scale the connection based on how close it is to an actual
+    % connection state:
+    A = C(dom)*A;
     
 end

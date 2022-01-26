@@ -1,4 +1,4 @@
-function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
+function output = sysf_two_pin_legged_rigidbody_singleMode_debugVer(input_mode,pathnames)
 
 	% Default arguments
 	if ~exist('input_mode','var')
@@ -25,7 +25,7 @@ function output = sysf_two_pin_legged_rigidbody_debugVer(input_mode,pathnames)
 
             %%%%%%
             % Ankle limit amplitude for the legged robot:
-            ank = round(pi/4, 1); % +- 45degs
+            ank = round(pi/2, 1); % +- 45degs
 
             % Leg-to-link length fraction:
             a = 1;

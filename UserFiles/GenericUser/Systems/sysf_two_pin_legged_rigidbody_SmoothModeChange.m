@@ -25,8 +25,17 @@ function output = sysf_two_pin_legged_rigidbody_SmoothModeChange(input_mode,path
 
             %%%%%%
             % Ankle limit amplitude for the legged robot:
-            ank = round(pi/4,1);
+            ank = round(pi/2,1);
 
+            % Contact map domain limits:
+            % OLD DOMAIN: [0, 1]
+            con_lim = [-1, 1]; % This won't change based on the function.
+            dom_margin = 10;  % in percentage give how much larger the input
+                             % space needs to be incomparison to the
+                             % contact domain.
+            dom_thresh = [con_lim(1)-dom_margin*diff(con_lim)/100,...
+                con_lim(2)+dom_margin*diff(con_lim)/100];
+            
             % Leg-to-link length fraction:
             a = 1;
 
@@ -52,8 +61,6 @@ function output = sysf_two_pin_legged_rigidbody_SmoothModeChange(input_mode,path
             % illustrate_shapespace. (Use a cell of gridpoints along each
             % axis to use different spacings for different axes)
             s.visual.grid_spacing = ank*[-1  0  1];
-            % THIS IS CURRENTLY NOT SUPPORTED SINCE WE ARE IN LEG-SWING AND
-            % ADHESION COORDINATES
 
             %%%
             %%%%%%
@@ -80,6 +87,13 @@ function output = sysf_two_pin_legged_rigidbody_SmoothModeChange(input_mode,path
             s.physics.coulomb_friction_coeff = [];
             s.physics.viscous_friction_coeff = [];
             s.physics.type = 'rate_limited';
+            
+            % Let's introduce another array that holds the metric main
+            % diagonal entries in increasing order
+%             s.physics.mDiag = [0.1, 1];
+%             % If you want them to weighted equally:
+            s.physics.mDiag = [];
+
             % Other types include (NOT SUPPORT RN) ~~~~~~~~~~~~~~~~~~~~~~~~
             % 'anisotropic_friction' 'inertial'
            
@@ -102,14 +116,11 @@ function output = sysf_two_pin_legged_rigidbody_SmoothModeChange(input_mode,path
             
 			%Processing details
 
-% %             % Leg angle threshold:
-% %             alpha_thresh = deg2rad(ank/10);
-
 			%Range over which to evaluate connection
-			s.grid_range = [-ank,ank,-0.2,1.2];
-
+			s.grid_range = [-ank,ank,dom_thresh(1),dom_thresh(2)];
+            
 			%densities for various operations
-			s.density.vector = [21 21 ]; %density to display vector field
+			s.density.vector = [21 21]; %density to display vector field
 			s.density.scalar = [51 51 ]; %density to display scalar functions
 			s.density.eval = [31 31 ];   %density for function evaluations
             s.density.metric_eval = [11 11]; %density for metric evaluation
@@ -119,8 +130,8 @@ function output = sysf_two_pin_legged_rigidbody_SmoothModeChange(input_mode,path
 
 			%shape space tic locations
 			s.tic_locs.x = [-1 0 1]*ank;
-            s.tic_locs.y = [0 0.5 1];
-
+            s.tic_locs.y = [con_lim(1) 0 con_lim(2)];
+            
             % Set system type variable for gait optimization
             s.system_type = 'drag'; % need to think about the choices
             

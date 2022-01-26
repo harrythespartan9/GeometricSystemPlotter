@@ -1,13 +1,13 @@
-function [A, h, J,J_full,Omega] = Legged_local_connection(geometry,physics,shapeparams)
+function [A, h, J,J_full,Omega] = HybridContact_local_connection(geometry,physics,shapeparams)
 % Calculate the local connection for a set of curvature bases
 %
 % Inputs:
 % geometry: structure defining system geometry
 %      geometry.type: how the system geometry is defined 
-%         (e.g., n-disk-legged, n-multidisk-legged, discrete-compliant)
+%         (e.g., links, curvature basis, general curvature)
 %      geometry.function: map from shape variables to local backbone
-%         deformation (e.g., joint angles)
-%      geometry.length: total length of the walker
+%         deformation (e.g., curvature or joint angles)
+%      geometry.length: total length of swimmer
 % physics: structure defining system physics
 %      drag_ratio: ratio of lateral to longitudinal drag
 %      drag_coefficient: drag per unit length
@@ -20,11 +20,11 @@ function [A, h, J,J_full,Omega] = Legged_local_connection(geometry,physics,shape
 % the local connection should be generated
 switch geometry.type
     
-    case {'curvature basis','curvature bases','general curvature'}
-        physics_function = @LowRE_connection_continuous;
+%     case {'curvature basis','curvature bases','general curvature'}
+%         physics_function = @LowRE_connection_continuous;
         
     case {'n-link chain','branched chain'}
-        physics_function = @LowRE_connection_discrete;
+        physics_function = @HybridContact_connection_discrete;
         
 end
 

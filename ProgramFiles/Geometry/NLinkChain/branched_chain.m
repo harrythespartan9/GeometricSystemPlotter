@@ -88,7 +88,23 @@ function [h, J, J_full,frame_zero,J_zero] = branched_chain(geometry,shapeparams_
 %
 %   J_zero : The Jacobian from shape velocity to body velocity of the
 %       selected baseframe, with the first link held fixed.
-%       
+%     
+
+% Check if this is a hybrid contact system
+% Also, this only supports single joint-angle and contact variable systems
+if geometry.contact % if contact is set to one
+     
+    % The joint/rotor-angle is the first parameter (remove contact from the
+    % shapeparams variable):
+    shapeparams_global = shapeparams_global(1);
+
+    % Now, we repeat the number the rotor angle for all the subchains:
+    shapeparams_global = repmat(shapeparams_global,1,numel(geometry.subchains));
+
+    % We are doing this to not let the contact state of the system get into
+    % the kinematics.
+    
+end
 
 % Build a lookup table from joint numbers to joints on the subchains
 joint_lookup_local_to_global = cell(size(geometry.subchains));
@@ -252,8 +268,14 @@ for idx = 2:numel(h_set)
 %         J_full_set_padded{idx}{idx2} = [Adjointinverse_body_transform * J_full_set_padded{idx}{idx2}(:,1:3), J_full_set_padded{idx}{idx2}(:,4:end)];
 %         
 %     end
+
+
+
     
 end
+
+
+
 
 
 % % Combine the h_set values into a single item

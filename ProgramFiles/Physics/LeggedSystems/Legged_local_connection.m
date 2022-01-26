@@ -33,7 +33,10 @@ switch geometry.type
             % then initialize the 
             if sum(isinf(physics.st_friction_coeff),'all') == size(physics.st_friction_coeff,1)
                 
-                physics_function = @pin2slip_leg_constraint;
+%                 physics_function = @pin2slip_leg_constraint; % OLD
+%                 DOMAIN -- c \in [0,1]
+                physics_function = @pin2slip_leg_constraint_ext; % NEW 
+                % DOMAIN -- c \in [-1,1]
 
             else
                 

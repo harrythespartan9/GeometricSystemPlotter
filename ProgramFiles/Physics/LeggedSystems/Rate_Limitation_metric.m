@@ -82,7 +82,17 @@ function Mp = Rate_Limitation_metric(geometry,physics,jointangles)
 
     [A,~,~,~] = Legged_local_connection(geometry,physics,jointangles);    
     
-    % Metric is the identity matrix acting on the shape-velocities.
-    Mp = eye(size(A,2)); % Local connection
+    % Metric is the identity matrix acting on the shape-velocities
+    % (weighted by the values given in the mDiag array:
+    if isempty(physics.mDiag) % just use identity
+        Mp = eye(size(A,2)); % positive definite rate limit metric tensor
+    else
+        if numel(physics.mDiag) ~= size(A,2)
+            error('ERROR: The number of entries should match the size of the shape-space!');
+        else
+            Mp = diag(physics.mDiag);
+        end
+    end
+%     Mp = eye(size(A,2));
     
 end

@@ -18,9 +18,7 @@ else
             
         case {'branched chain'}
             drawing_generator = @fat_branched_chain;
-
-        case {'n-disk-legged'}
-            drawing_generator = @n_disk_legged_walker;
+            
     end
 end
 
