@@ -1,4 +1,4 @@
-function [A, h, J, J_full, omega] = HybridContact_connection_discrete(geometry,~,jointangles)
+function [A, h, J, J_full, omega] = HybridContact_connection_discrete_v2(geometry,~,jointangles)
 % Calculate the local connection for a set of curvature bases
 %
 % Inputs:
@@ -55,7 +55,7 @@ function [A, h, J, J_full, omega] = HybridContact_connection_discrete(geometry,~
 %       shape velocities to net external forces acting on the base frame,
 %       which must be zero for all achievable motions of the system
     
-    % Get the number of subchains and repeat the rotor angle -- attachment
+% Get the number of subchains and repeat the rotor angle -- attachment
     % of the subchains will add angle to each chain to maintain orientation
     % with the base link
     numC = numel(geometry.subchains);
@@ -97,8 +97,15 @@ function [A, h, J, J_full, omega] = HybridContact_connection_discrete(geometry,~
         J_full{idx} = J_full{idx}(:,1:5);
         % Check if this is a rotor link
         if mod(idx,2) == 0
-            % Get the index to work with
+            % Get the index to work with -- check if it is a 3 or two contact
             widx = idx/2;
+            if idx == numel(J_full) % if it is the final index
+                if numC ~= 3
+                    widx = 3;
+                end
+            end % Note that this method is not extendable to more than 3 contact states.
+            % this is a temporary implementation.
+            
             % Contact index (independent because you can contact <=3 at the moment)
             % Get the contact value
             % system:
@@ -123,17 +130,17 @@ function [A, h, J, J_full, omega] = HybridContact_connection_discrete(geometry,~
 end
 
 
-%%% interpolation function
+%%% interpolation function - version 2 (contact connects on itself)
 
 function fi = contactMap(c,i,n)
 
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % In V2, first and last contact states are formed by 1. All other
+    % contact states are intermediate.
 
-    % In V1, first and last contact states are formed by 1 and n
-    % respectively.
-
-    % Get the spacing (V1):
-    s = 2/(n-1);
+    % Get the spacing (V2):
+    s = 2/n;
 
     % Get the sinusoidal term coefficient:
     coeff = pi/s;
@@ -148,21 +155,15 @@ function fi = contactMap(c,i,n)
                 fi = 1;
             elseif c <= -1+s && c > -1
                 fi = ( 1 + cos(coeff*(c+1)) )*0.5;
-            else
+            elseif c > -1+s && c <= -1 + (n-1)*s
                 fi = 0;
-            end
-
-        case i == n % last contact state
-
-            if c <= -1 + (n-2)*s
-                fi = 0;
-            elseif c <= 1 && c > -1 + (n-2)*s
-                fi = ( 1 - cos(coeff*(c + 1 - (n-2)*s)) )*0.5;
-            else
+            elseif c > -1 + (n-1)*s && c <= 1
+                fi = ( 1 - cos(coeff*(c + 1 -(n-1)*s)) )*0.5;
+            else % greater than or equal to 1 case
                 fi = 1;
             end
 
-        case i > 1 && i < n % intermediate contact states
+        case i ~= 1 % all other contact states
 
             if c <= -1 + (i-2)*s
                 fi = 0;

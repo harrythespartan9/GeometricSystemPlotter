@@ -11,7 +11,7 @@ function [A, h, J,J_full,Omega] = HybridContact_local_connection(geometry,physic
 % physics: structure defining system physics
 %      drag_ratio: ratio of lateral to longitudinal drag
 %      drag_coefficient: drag per unit length
-% cparams: value of shape variables
+% shapeparams: value of shape variables
 
 
 
@@ -19,12 +19,16 @@ function [A, h, J,J_full,Omega] = HybridContact_local_connection(geometry,physic
 % Identify what kind of system is being calculated, and use this to specify how
 % the local connection should be generated
 switch geometry.type
-    
-%     case {'curvature basis','curvature bases','general curvature'}
-%         physics_function = @LowRE_connection_continuous;
         
     case {'n-link chain','branched chain'}
-        physics_function = @HybridContact_connection_discrete;
+
+        % Check how many legs are there -- if 2 call this, else call v2:
+        if numel(geometry.subchains) > 2
+            physics_function = @HybridContact_connection_discrete;
+            % HybridContact_connection_discrete_v2
+        else
+            physics_function = @HybridContact_connection_discrete;
+        end
         
 end
 

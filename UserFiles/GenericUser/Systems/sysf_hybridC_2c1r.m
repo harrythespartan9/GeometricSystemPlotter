@@ -99,7 +99,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
 
 			%shape space tic locations
 			s.tic_locs.x = [-1 0 1]*ank;
-			s.tic_locs.y = [con_lim(1) 0 con_lim(2)];
+			s.tic_locs.y = [con_lim(1) con_lim(2)];
 
             % Set system type variable for gait optimization
             s.system_type = 'drag'; % need to think about the choices
