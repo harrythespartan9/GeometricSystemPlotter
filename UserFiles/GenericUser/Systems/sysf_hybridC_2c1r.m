@@ -60,7 +60,8 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace.
-            s.visual.grid_spacing = [-1  0  1];
+            s.visual.grid_spacing{1} = [-1  0  1];
+            s.visual.grid_spacing{2} = [-1  1];
             
             %%%
             %%%%%%
