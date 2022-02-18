@@ -26,7 +26,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             %%%%%%
             % Define system geometry
             
-            g_template.linklengths = [0.0 1]/6;
+            g_template.linklengths = [0.0 1]/2;
             
             g1 = g_template;
             g1.baseframe = {'tail'};
@@ -60,7 +60,8 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace.
-            s.visual.grid_spacing = [-1  0  1];
+            s.visual.grid_spacing{1} = [-1 0 1];
+            s.visual.grid_spacing{2} = [-1 1];
             
             %%%
             %%%%%%
@@ -95,11 +96,17 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
 			s.density.eval = [ 62 62];   %density for function evaluations  [ 31 31]
             s.density.metric_eval = [22 22]; %density for metric evaluation  [ 11 11]
             s.density.finite_element=22;
+%             %densities for various operations
+% 			s.density.vector = [44 44]; %density to display vector field  [ 11 11]
+% 			s.density.scalar = [44 44]; %density to display scalar functions  [ 11 11]
+% 			s.density.eval = [93 93];   %density for function evaluations  [ 31 31]
+%             s.density.metric_eval = [44 44]; %density for metric evaluation  [ 11 11]
+%             s.density.finite_element=44;
 
 
 			%shape space tic locations
 			s.tic_locs.x = [-1 0 1]*ank;
-			s.tic_locs.y = [con_lim(1) con_lim(2)];
+			s.tic_locs.y = [con_lim(1) 0 con_lim(2)];
 
             % Set system type variable for gait optimization
             s.system_type = 'drag'; % need to think about the choices

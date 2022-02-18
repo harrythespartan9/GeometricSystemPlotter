@@ -21,14 +21,8 @@ function [A, h, J,J_full,Omega] = HybridContact_local_connection(geometry,physic
 switch geometry.type
         
     case {'n-link chain','branched chain'}
-
-        % Check how many legs are there -- if 2 call this, else call v2:
-        if numel(geometry.subchains) > 2
             physics_function = @HybridContact_connection_discrete;
-            % HybridContact_connection_discrete_v2
-        else
-            physics_function = @HybridContact_connection_discrete;
-        end
+            %HybridContact_connection_discrete_v2 HybridContact_connection_discrete
         
 end
 

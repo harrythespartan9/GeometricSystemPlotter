@@ -99,13 +99,6 @@ function [A, h, J, J_full, omega] = HybridContact_connection_discrete_v2(geometr
         if mod(idx,2) == 0
             % Get the index to work with -- check if it is a 3 or two contact
             widx = idx/2;
-            if idx == numel(J_full) % if it is the final index
-                if numC ~= 3
-                    widx = 3;
-                end
-            end % Note that this method is not extendable to more than 3 contact states.
-            % this is a temporary implementation.
-            
             % Contact index (independent because you can contact <=3 at the moment)
             % Get the contact value
             % system:
@@ -169,7 +162,7 @@ function fi = contactMap(c,i,n)
                 fi = 0;
             elseif c <= -1 + i*s && c > -1 + (i-2)*s
                 fi = ( 1 - cos(coeff*(c + 1 - (i-2)*s)) )*0.5;
-            else
+            elseif c > -1 + i*s
                 fi = 0;
             end
 

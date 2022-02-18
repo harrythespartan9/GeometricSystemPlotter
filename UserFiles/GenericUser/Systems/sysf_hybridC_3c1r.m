@@ -63,7 +63,8 @@ function output = sysf_hybridC_3c1r(input_mode,pathnames)
             
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace.
-            s.visual.grid_spacing = [-1  0  1];
+            s.visual.grid_spacing{1} = [-1 0 1];
+            s.visual.grid_spacing{2} = [-1 0 1];
             
             %%%
             %%%%%%
@@ -93,16 +94,16 @@ function output = sysf_hybridC_3c1r(input_mode,pathnames)
 			s.grid_range = [-ank,ank,dom_thresh(1),dom_thresh(2)];
 
 			%densities for various operations
-			s.density.vector = [11 11]; %density to display vector field  [ 11 11]
-			s.density.scalar = [11 11]; %density to display scalar functions  [ 11 11]
-			s.density.eval = [ 31 31];   %density for function evaluations  [ 31 31]
-            s.density.metric_eval = [11 11]; %density for metric evaluation  [ 11 11]
-            s.density.finite_element=11;
+			s.density.vector = [23 23]; %density to display vector field  [ 11 11]
+			s.density.scalar = [23 23]; %density to display scalar functions  [ 11 11]
+			s.density.eval = [ 63 63];   %density for function evaluations  [ 31 31]
+            s.density.metric_eval = [23 23]; %density for metric evaluation  [ 11 11]
+            s.density.finite_element=23;
 
 
 			%shape space tic locations
 			s.tic_locs.x = [-1 0 1]*ank;
-			s.tic_locs.y = [con_lim(1) con_lim(2)];
+			s.tic_locs.y = [con_lim(1) 0 con_lim(2)];
 
             % Set system type variable for gait optimization
             s.system_type = 'drag'; % need to think about the choices
