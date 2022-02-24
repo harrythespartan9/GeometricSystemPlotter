@@ -26,7 +26,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             %%%%%%
             % Define system geometry
             
-            g_template.linklengths = [0.0 1]/2;
+            g_template.linklengths = [0 1]; %[0.0 1]/2
             
             g1 = g_template;
             g1.baseframe = {'tail'};
@@ -43,24 +43,24 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             s.geometry.contact = 1; % if this is a hybrid contact system.
             s.geometry.baseframe = 'tail-tip'; 
             % put the baseframe at the origin wrt to the first link eye(3,3) or 'tail-tip'
-            s.geometry.length = 1;
+%             s.geometry.length = 1;
 
             % Contact map domain limits:
             con_lim = [-1, 1];
-            dom_margin = 5; 
+            dom_margin = 5; % 5 
             dom_thresh = [con_lim(1)-dom_margin*diff(con_lim)/100,...
                 con_lim(2)+dom_margin*diff(con_lim)/100];
 
             %%%%%%
             % Ankle limit amplitude for the legged robot:
-            ank = 1; % with a 1 radian ankle limit
+            ank = pi/2; % with a 1 radian ankle limit
             
             %%%
             % Define properties for visualizing the system
             
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace.
-            s.visual.grid_spacing{1} = [-1 0 1];
+            s.visual.grid_spacing{1} = [-ank 0 ank];
             s.visual.grid_spacing{2} = [-1 1];
             
             %%%
@@ -88,14 +88,14 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
 			%Processing details
 
 			%Range over which to evaluate connection
-			s.grid_range = [-ank,ank,dom_thresh(1),dom_thresh(2)];
+			s.grid_range = [-ank-(dom_margin/100)*ank,ank+(dom_margin/100)*ank,dom_thresh(1),dom_thresh(2)];
 
 			%densities for various operations
-			s.density.vector = [22 22]; %density to display vector field  [ 11 11]
-			s.density.scalar = [22 22]; %density to display scalar functions  [ 11 11]
-			s.density.eval = [ 62 62];   %density for function evaluations  [ 31 31]
-            s.density.metric_eval = [22 22]; %density for metric evaluation  [ 11 11]
-            s.density.finite_element=22;
+			s.density.vector = [23 23]; %density to display vector field  [ 11 11]
+			s.density.scalar = [45 45]; %density to display scalar functions  [ 11 11]
+			s.density.eval = [63 63];   %density for function evaluations  [ 31 31]
+            s.density.metric_eval = [23 23]; %density for metric evaluation  [ 11 11]
+            s.density.finite_element=23;
 %             %densities for various operations
 % 			s.density.vector = [44 44]; %density to display vector field  [ 11 11]
 % 			s.density.scalar = [44 44]; %density to display scalar functions  [ 11 11]
