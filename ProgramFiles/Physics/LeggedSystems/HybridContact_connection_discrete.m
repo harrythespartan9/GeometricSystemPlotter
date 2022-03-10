@@ -75,7 +75,8 @@ function [A, h, J, J_full, omega] = HybridContact_connection_discrete(geometry,~
     end
 
     % Make an inline function that will compute the strength of the
-    % connection -- higher at actual contact since 
+    % connection -- we need to manually move the foot-tip the end of the
+    % link instead of mid-way in the leg link
     Cs = @(d) 2;
 
     % Create an empty Omega matrix to store the Pfaffian constraints:

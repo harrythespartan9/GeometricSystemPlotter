@@ -8,7 +8,7 @@ switch geometry.type
 %     case {'curvature basis','curvature bases','general curvature'}
 %         physics_function = @LowRE_metric_continuous;
         
-    case {'n-link chain','branched chain'}
+    case {'n-link chain','branched chain','multi_disk_11'}
         physics_function = @HybridContact_rateLimit_metric_discrete;
         
 end

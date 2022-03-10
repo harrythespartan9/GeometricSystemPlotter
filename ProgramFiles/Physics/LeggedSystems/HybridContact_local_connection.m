@@ -16,12 +16,16 @@ function [A, h, J,J_full,Omega] = HybridContact_local_connection(geometry,physic
 
 
 
-% Identify what kind of system is being calculated, and use this to specify how
-% the local connection should be generated
+% Identify what kind of system is being calculated, and use this to specify 
+% how the local connection should be generated
 switch geometry.type
-        
+    
     case {'n-link chain','branched chain'}
         physics_function = @HybridContact_connection_discrete;
+    
+    case 'multi_disk_11'
+        physics_function = @ContactSwitch_connection_ds_multiDisk11;
+    
 end
 
 % Call the physics function identified for the system
