@@ -39,7 +39,7 @@ function output = sysf_hybridC_2c2r_multidisk(input_mode,pathnames)
             %%%
             %%%%%%
             % Define system physics
-            s.physics.rateLim = [1, 1, 0];
+            s.physics.rateLim = [1, 1, 1];
             
             %Functional Local connection and dissipation metric
 
