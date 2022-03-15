@@ -11,7 +11,7 @@ function output = shchf_SinusoidalDualRotor(input_mode,pathnames)
 		
 		case 'name'
 			
-			output = 'Double Rotor DS Multi-disk: Circle, Amp = pi/4';
+			output = 'Double Rotor DS Multi-disk: Circle, Amp = 0.25, Offset = [0.3,-0.3]';
 			
 		case 'dependency'
 			
@@ -53,10 +53,10 @@ end
 function [stroke] = strokedef(tau)
     
     % Leg swing amplitude (consider a single sine gait for now)
-	amp_alpha = pi/4;
+	amp_alpha = 0.25;
     
     % Compute the leg swing shapes directly since they are controlled
-    stroke = [amp_alpha*sin(tau), amp_alpha*cos(tau)]; % These are your leg 
+    stroke = [amp_alpha*sin(tau) + 0.3, amp_alpha*cos(tau) - 0.3]; % These are your leg 
     % angles as a function of time.
     
     %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,14 +84,14 @@ end
 function gd = sprawl_velocity(t,g)
 
     % Leg swing amplitude (consider a single sine gait for now)
-	amp_alpha = pi/4;
+	amp_alpha = 0.25;
 
     % Define the map from limb rotational velocity to sprawl velocity
     Omega_1p_2ndrow = @(a1,a2,g) [0.5*(sin(a1-a2+2*g)+cos(a1)-cos(a1+2*g)), -0.5*(sin(a1-a2+2*g)+cos(a2)-cos(a2-2*g))]*...
         (1/(sin(2*g) - sin(a1-a2+2*g) + cos(a1+2*g) + cos(a2-2*g)));
 
     % Get the limb swing angle and angular velocities:
-    a1 = amp_alpha*sin(t); a2 = amp_alpha*cos(t);
+    a1 = amp_alpha*sin(t) + 0.3; a2 = amp_alpha*cos(t) - 0.3;
     ad = [amp_alpha*cos(t), -amp_alpha*sin(t)]';
 
     % Obtain the sprawl velocity:

@@ -54,7 +54,7 @@ function [stroke] = strokedef(t)
     
 	t = -t(:)';
 
-	amp_alpha = pi/4;
+	amp_alpha = 1.1; % pi/4, 1.1, 1.5
 
     % Create a negative sign flag:
     n = @(phi) -1*(phi < 0);

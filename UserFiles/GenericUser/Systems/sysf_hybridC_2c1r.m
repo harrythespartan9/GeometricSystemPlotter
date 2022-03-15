@@ -26,7 +26,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             %%%%%%
             % Define system geometry
             
-            g_template.linklengths = [0 1]; %[0.0 1]/2
+            g_template.linklengths = [0 1]/2; %[0.0 1]/2
             
             g1 = g_template;
             g1.baseframe = {'tail'};
@@ -43,7 +43,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             s.geometry.contact = 1; % if this is a hybrid contact system.
             s.geometry.baseframe = 'tail-tip'; 
             % put the baseframe at the origin wrt to the first link eye(3,3) or 'tail-tip'
-%             s.geometry.length = 1;
+            s.geometry.length = 0.01;
 
             % Contact map domain limits:
             con_lim = [-1, 1];
@@ -61,7 +61,7 @@ function output = sysf_hybridC_2c1r(input_mode,pathnames)
             % Make a grid of values at which to visualize the system in
             % illustrate_shapespace.
             s.visual.grid_spacing{1} = [-ank 0 ank];
-            s.visual.grid_spacing{2} = [-1 1];
+            s.visual.grid_spacing{2} = [-1 1]; %[-1 1]
             
             %%%
             %%%%%%
